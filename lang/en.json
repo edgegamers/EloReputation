@@ -8,5 +8,6 @@
   "rep_given": "%prefix%{white}You {green}commended {lightred}{0}{white}.",
   "rep_taken": "%prefix%{white}You {darkred}denounced {lightred}{0}{white}.",
   "rep_status": "%prefix%{lightred}{0} {white}has {yellow}{1} {white}reputation points.",
-  "rep_fetching": "%prefix%Fetching reputation data for {yellow}{0}{white} player{1}..."
+  "rep_fetching": "%prefix%Fetching reputation data for {yellow}{0}{grey} player{1}...",
+  "rep_ranking": "%prefix%You are ranked {yellow}#{0}{orange}/{1}{grey}."
 }

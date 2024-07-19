@@ -14,7 +14,7 @@ public class EloReputation : BasePlugin, IEloPlugin {
   public EloConfig Config { get; set; } = null!;
 
   public void OnConfigParsed(EloConfig config) { Config = config; }
-  public BasePlugin getBase() { throw new NotImplementedException(); }
+  public BasePlugin getBase() { return this; }
   public IReputationService getReputationService() { return repService; }
   public IRateLimiter<ulong> getRateLimiter() { return rateLimiter; }
 
@@ -29,6 +29,7 @@ public class EloReputation : BasePlugin, IEloPlugin {
     CommandInfo.CommandCallback up   = new UpCommand(this).OnCommand;
     CommandInfo.CommandCallback down = new DownCommand(this).OnCommand;
     CommandInfo.CommandCallback rep  = new RepCommand(this).OnCommand;
+    CommandInfo.CommandCallback top  = new RepTopCommand(this).OnCommand;
     AddCommand("css_up", "", up);
     AddCommand("css_commend", "", up);
     AddCommand("css_like", "", up);
@@ -38,5 +39,9 @@ public class EloReputation : BasePlugin, IEloPlugin {
     AddCommand("css_rep", "", rep);
     AddCommand("css_reputation", "", rep);
     AddCommand("css_elo", "", rep);
+    AddCommand("css_elotop", "", top);
+    AddCommand("css_reptop", "", top);
+    AddCommand("css_leaderboard", "", top);
+    AddCommand("css_lb", "", top);
   }
 }

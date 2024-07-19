@@ -25,7 +25,8 @@ public class ReputationService : IReputationService {
 
     cmd.Parameters.AddWithValue("@steamId", steamId);
 
-    return (double)(await cmd.ExecuteScalarAsync() ?? 0);
+    var result = (double)(await cmd.ExecuteScalarAsync() ?? 0);
+    return Math.Round(result, 2);
   }
 
   public async Task<IEnumerable<(ulong, double)>> GetReputation(
@@ -69,10 +70,48 @@ public class ReputationService : IReputationService {
 
     await using var reader  = await cmd.ExecuteReaderAsync();
     var             results = new List<(ulong, double)>();
-    while (await reader.ReadAsync())
-      results.Add(((ulong)reader["target"], (double)reader["total_value"]));
+    while (await reader.ReadAsync()) {
+      var target = ulong.Parse(reader["target"].ToString() ?? string.Empty);
+      var value  = (double)reader["total_value"];
+      results.Add((target, value));
+    }
 
     return results;
+  }
+
+  public async Task<(int, int)> GetReputationPosition(ulong steamId) {
+    await using var conn =
+      new MySqlConnection(plugin.Config.DatabaseConnectionString);
+    await conn.OpenAsync();
+
+    var cmd = conn.CreateCommand();
+    cmd.CommandText = $"""
+          SELECT COUNT(*) AS `position`
+          FROM `{plugin.Config.DatabaseTablePrefix}total`
+          WHERE `total_value` > (
+              SELECT `total_value`
+              FROM `{plugin.Config.DatabaseTablePrefix}total`
+              WHERE `target` = @steamId
+          );
+      """;
+
+    cmd.Parameters.AddWithValue("@steamId", steamId);
+
+    await using var reader = await cmd.ExecuteReaderAsync();
+    if (!await reader.ReadAsync()) return (0, 0);
+
+    var position = int.Parse(reader["position"].ToString() ?? "0") + 1;
+
+    reader.Close();
+
+    cmd = conn.CreateCommand();
+    cmd.CommandText = $"""
+          SELECT COUNT(*) AS `total_value`
+          FROM `{plugin.Config.DatabaseTablePrefix}total`;
+      """;
+
+    return (position,
+      Convert.ToInt32((long)(await cmd.ExecuteScalarAsync() ?? 0)));
   }
 
   public async Task AddReputation(ulong giver, ulong receiver,

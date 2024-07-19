@@ -39,7 +39,7 @@ public class UpCommand(IEloPlugin elo) : Command(elo) {
     }
 
     elo.getReputationService()
-     .AddReputation(source.Value, receiver.Value, false);
+     .AddReputation(source.Value, receiver.Value);
     info.ReplyLocalized(elo.getBase().Localizer, "rep_given",
       target.First().PlayerName);
   }

@@ -12,6 +12,8 @@ public interface IReputationService {
 
   Task<IEnumerable<(ulong, double)>> GetTopReputation(int limit = 10,
     int offset = 0);
+  
+  Task<(int, int)> GetReputationPosition(ulong steamId);
 
   Task AddReputation(ulong giver, ulong receiver, bool positive = true);
 }

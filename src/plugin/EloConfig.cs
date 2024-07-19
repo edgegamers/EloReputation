@@ -5,8 +5,7 @@ namespace EloReputation.api;
 
 public class EloConfig : BasePluginConfig {
   [JsonPropertyName("DatabaseConnectionString")]
-  public string? DatabaseConnectionString { get; set; } =
-    "Server=sm-db.edge-gamers.com;Database=reputation_dev;user=reputation_user;password=mVPDwA24y8768yvLHx6Jr6SppxjF;port=3306";
+  public string? DatabaseConnectionString { get; set; }
 
   [JsonPropertyName("DatabaseTablePrefix")]
   public string DatabaseTablePrefix { get; set; } = "reputation_";
