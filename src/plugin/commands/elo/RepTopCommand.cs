@@ -17,12 +17,20 @@ public class RepTopCommand(IEloPlugin elo) : Command(elo) {
 
     if (executor == null) {
       Server.NextFrameAsync(async () => {
-        var top = await Elo.GetReputationService().GetTopReputation();
+        var top   = await Elo.GetReputationService().GetTopReputation();
+        var names = new List<Task<string>>();
+
+        var valueTuples = top.ToList();
+        for (var i = 0; i < valueTuples.Count; i++) {
+          names.Add(NameUtil.GetPlayerNameAsync(valueTuples[i].Item1));
+        }
+
+        var result = await Task.WhenAll(names);
 
         Server.NextFrame(() => {
           var i = 1;
-          foreach (var entry in top) {
-            var name = NameUtil.GetPlayerName(entry.Item1);
+          foreach (var entry in valueTuples) {
+            var name = result[i - 1];
             var rep  = Math.Round(entry.Item2, 2);
             printTo(executor,
               $"{ChatColors.Green}{i++}{ChatColors.Grey}: {ChatColors.Blue}{name} {ChatColors.Grey}- {ChatColors.Yellow}{rep}");
