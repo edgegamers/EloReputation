@@ -1,9 +1,21 @@
-﻿namespace EloReputation.plugin.utils;
+﻿using CounterStrikeSharp.API;
+
+namespace EloReputation.plugin.utils;
 
 public static class NameUtil {
   private static readonly Dictionary<ulong, string> NAME_CACHE = new();
 
-  public static async Task<string> GetPlayerNameFromSteamID(ulong steamID) {
+  public static string GetPlayerName(ulong steamID) {
+    if (NAME_CACHE.TryGetValue(steamID, out var value)) return value;
+
+    var player = Utilities.GetPlayerFromSteamId(steamID);
+    if (player == null || !player.IsValid)
+      return GetPlayerNameFromSteam(steamID).GetAwaiter().GetResult();
+    NAME_CACHE[steamID] = player.PlayerName;
+    return player.PlayerName;
+  }
+
+  public static async Task<string> GetPlayerNameFromSteam(ulong steamID) {
     if (NAME_CACHE.TryGetValue(steamID, out var value)) return value;
 
     try {

@@ -15,28 +15,14 @@ public class RepTopCommand(IEloPlugin elo) : Command(elo) {
     CommandInfo info) {
     var id = executor?.AuthorizedSteamID?.SteamId64;
 
-    var names = new List<string>();
-
     if (executor == null) {
       Server.NextFrameAsync(async () => {
-        var top     = await Elo.GetReputationService().GetTopReputation();
-        var queries = new List<Task<string>>();
-
-        Server.NextFrame(() => {
-          foreach (var entry in top) {
-            var player = Utilities.GetPlayerFromSteamId(entry.Item1);
-            queries.Add(player == null ?
-              NameUtil.GetPlayerNameFromSteamID(entry.Item1) :
-              Task.FromResult(player.PlayerName));
-          }
-
-          names = [..Task.WhenAll(queries).GetAwaiter().GetResult()];
-        });
+        var top = await Elo.GetReputationService().GetTopReputation();
 
         Server.NextFrame(() => {
           var i = 1;
           foreach (var entry in top) {
-            var name = names[i - 1];
+            var name = NameUtil.GetPlayerName(entry.Item1);
             var rep  = Math.Round(entry.Item2, 2);
             printTo(executor,
               $"{ChatColors.Green}{i++}{ChatColors.Grey}: {ChatColors.Blue}{name} {ChatColors.Grey}- {ChatColors.Yellow}{rep}");
@@ -46,8 +32,8 @@ public class RepTopCommand(IEloPlugin elo) : Command(elo) {
       return;
     }
 
+    if (id == null) return;
     Server.NextFrameAsync(async () => {
-      if (id == null) return;
       var top = await Elo.GetReputationService().GetTopReputation(50);
       Server.NextFrame(() => {
         var menu = new ReputationMenu(Elo, top);
