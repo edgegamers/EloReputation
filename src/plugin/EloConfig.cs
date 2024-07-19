@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using CounterStrikeSharp.API.Core;
 
-namespace EloReputation.api;
+namespace EloReputation.plugin;
 
 public class EloConfig : BasePluginConfig {
   [JsonPropertyName("DatabaseConnectionString")]
@@ -18,5 +18,15 @@ public class EloConfig : BasePluginConfig {
     { "@ego/dsgold", 5 },
     { "@ego/dsplatinum", 6 },
     { "@ego/dsroyal", 8 }
+  };
+
+  [JsonPropertyName("MaxPeriodicElo")]
+  public Dictionary<string, int> MaxPeriodicElo { get; set; } = new() {
+    { "", 1 },
+    { "@ego/e", 1 },
+    { "@ego/dssilver", 2 },
+    { "@ego/dsgold", 2 },
+    { "@ego/dsplatinum", 2 },
+    { "@ego/dsroyal", 3 }
   };
 }

@@ -2,7 +2,6 @@
 using CounterStrikeSharp.API.Modules.Commands;
 using EloReputation.api;
 using EloReputation.plugin.extensions;
-using plugin.commands;
 
 namespace EloReputation.plugin.commands.elo;
 
@@ -13,13 +12,13 @@ public class DownCommand(IEloPlugin elo) : Command(elo) {
 
     var target = info.GetArgTargetResult(1);
     if (!target.Any()) {
-      info.ReplyLocalized(elo.getBase().Localizer, "player_not_found",
+      info.ReplyLocalized(Elo.GetBase().Localizer, "player_not_found",
         info.GetArg(1));
       return;
     }
 
     if (target.Count() > 1) {
-      info.ReplyLocalized(elo.getBase().Localizer, "player_found_multiple",
+      info.ReplyLocalized(Elo.GetBase().Localizer, "player_found_multiple",
         info.GetArg(1));
       return;
     }
@@ -28,19 +27,28 @@ public class DownCommand(IEloPlugin elo) : Command(elo) {
     var receiver = target.First().AuthorizedSteamID?.SteamId64;
 
     if (source == null || receiver == null) {
-      info.ReplyLocalized(elo.getBase().Localizer, "player_invalid",
+      info.ReplyLocalized(Elo.GetBase().Localizer, "player_invalid",
         "You or they");
       return;
     }
 
-    if (!elo.getRateLimiter().Decrement(source.Value)) {
-      info.ReplyLocalized(elo.getBase().Localizer, "out_of_rep");
+
+    if (!Elo.GetMapLimiter().Decrement(source.Value)) {
+      info.ReplyLocalized(Elo.GetBase().Localizer, "out_of_rep_map");
       return;
     }
 
-    elo.getReputationService()
-     .AddReputation(source.Value, receiver.Value, false);
-    info.ReplyLocalized(elo.getBase().Localizer, "rep_taken",
+    if (!Elo.GetPeriodLimiter().Decrement(source.Value)) {
+      info.ReplyLocalized(Elo.GetBase().Localizer, "out_of_rep_period");
+      return;
+    }
+
+    info.ReplyLocalized(Elo.GetBase().Localizer, "rep_taken",
       target.First().PlayerName);
+
+    if (source.Value == receiver.Value) return;
+
+    Elo.GetReputationService()
+     .AddReputation(source.Value, receiver.Value, false);
   }
 }

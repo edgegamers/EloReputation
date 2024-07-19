@@ -3,7 +3,6 @@ using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Commands;
 using EloReputation.api;
 using EloReputation.plugin.extensions;
-using plugin.commands;
 
 namespace EloReputation.plugin.commands.elo;
 
@@ -32,22 +31,22 @@ public class RepCommand(IEloPlugin elo) : Command(elo) {
       if (info.GetArg(1).All(char.IsDigit)) {
         target = target.Append(ulong.Parse(info.GetArg(1)));
       } else {
-        info.ReplyLocalized(elo.getBase().Localizer, "player_not_found",
+        info.ReplyLocalized(Elo.GetBase().Localizer, "player_not_found",
           info.GetArg(1));
         return;
       }
     }
 
     var steamIds = target.ToList();
-    info.ReplyLocalized(elo.getBase().Localizer, "rep_fetching", steamIds.Count,
+    info.ReplyLocalized(Elo.GetBase().Localizer, "rep_fetching", steamIds.Count,
       steamIds.Count == 1 ? "" : "s");
     foreach (var steamId in steamIds)
       Server.NextFrameAsync(async () => {
-        var rep = await elo.getReputationService().GetReputation(steamId);
+        var rep = await Elo.GetReputationService().GetReputation(steamId);
         Server.NextFrame(() => {
           var name = Utilities.GetPlayerFromSteamId(steamId)?.PlayerName
             ?? steamId.ToString();
-          executor.PrintLocalizedChat(elo.getBase().Localizer, "rep_status",
+          executor.PrintLocalizedChat(Elo.GetBase().Localizer, "rep_status",
             name, rep);
         });
       });

@@ -25,8 +25,10 @@ public class ReputationService : IReputationService {
 
     cmd.Parameters.AddWithValue("@steamId", steamId);
 
-    var result = (double)(await cmd.ExecuteScalarAsync() ?? 0);
-    return Math.Round(result, 2);
+    var result = await cmd.ExecuteScalarAsync();
+
+    if (result is not double) return 0.0;
+    return Math.Round((double)result, 2);
   }
 
   public async Task<IEnumerable<(ulong, double)>> GetReputation(
@@ -141,7 +143,7 @@ public class ReputationService : IReputationService {
       var player = Utilities.GetPlayerFromSteamId(receiver);
       if (player == null || !player.IsValid) return;
       foreach (var p in Utilities.GetPlayers())
-        p.PrintLocalizedChat(plugin.getBase().Localizer, "rep_status",
+        p.PrintLocalizedChat(plugin.GetBase().Localizer, "rep_status",
           player.PlayerName, rep);
     });
   }

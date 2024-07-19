@@ -4,10 +4,10 @@ using CounterStrikeSharp.API.Modules.Commands.Targeting;
 using EloReputation.api;
 using EloReputation.plugin.extensions;
 
-namespace plugin.commands;
+namespace EloReputation.plugin.commands;
 
 public abstract class Command(IEloPlugin elo) {
-  protected readonly IEloPlugin elo = elo;
+  protected readonly IEloPlugin Elo = elo;
 
   public string? Description => null;
 
@@ -26,7 +26,7 @@ public abstract class Command(IEloPlugin elo) {
       matches.Players = matches.Players.Where(predicate).ToList();
 
     if (!matches.Any()) {
-      command.ReplyLocalized(elo.getBase().Localizer, "player_not_found",
+      command.ReplyLocalized(Elo.GetBase().Localizer, "player_not_found",
         command.GetArg(argIndex));
       return null;
     }
@@ -37,7 +37,7 @@ public abstract class Command(IEloPlugin elo) {
     if (matches.Count() == 1 || !command.GetArg(argIndex).StartsWith('@'))
       return matches;
 
-    command.ReplyLocalized(elo.getBase().Localizer, "player_found_multiple",
+    command.ReplyLocalized(Elo.GetBase().Localizer, "player_found_multiple",
       command.GetArg(argIndex));
     return null;
   }
@@ -53,13 +53,13 @@ public abstract class Command(IEloPlugin elo) {
     var matches = command.GetArgTargetResult(argIndex);
 
     if (!matches.Any()) {
-      command.ReplyLocalized(elo.getBase().Localizer, "player_not_found",
+      command.ReplyLocalized(Elo.GetBase().Localizer, "player_not_found",
         command.GetArg(argIndex));
       return null;
     }
 
     if (matches.Count() <= 1) return matches;
-    command.ReplyLocalized(elo.getBase().Localizer, "player_found_multiple",
+    command.ReplyLocalized(Elo.GetBase().Localizer, "player_found_multiple",
       command.GetArg(argIndex));
     return null;
   }

@@ -1,6 +1,6 @@
 using CounterStrikeSharp.API.Modules.Utils;
 
-namespace plugin.extensions;
+namespace EloReputation.plugin.extensions;
 
 public static class VectorExtensions {
   public static Vector Clone(this Vector vector) {
