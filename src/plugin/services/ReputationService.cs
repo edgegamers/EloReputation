@@ -78,13 +78,11 @@ public class ReputationService : IReputationService {
       new MySqlConnection(plugin.Config.DatabaseConnectionString);
     await conn.OpenAsync();
     var cmd = conn.CreateCommand();
-    cmd.CommandText = """
-      SELECT `total_value` FROM `@table`
-      WHERE `target` = @steamId;
-    """;
+    cmd.CommandText = $"""
+        SELECT `total_value` FROM `{plugin.Config.DatabaseTablePrefix}total`
+        WHERE `target` = @steamId;
+      """;
 
-    cmd.Parameters.AddWithValue("@table",
-      plugin.Config.DatabaseTablePrefix + "total");
     cmd.Parameters.AddWithValue("@steamId", steamId);
 
     return (float)(await cmd.ExecuteScalarAsync() ?? 0);
@@ -100,8 +98,7 @@ public class ReputationService : IReputationService {
     cmd.CommandText = $"""
         SELECT `target`, `total_value` FROM `{plugin.Config.DatabaseTablePrefix}total`
         WHERE `target` IN (@steamIds)
-        ORDER BY `total_value` DESC
-        LIMIT @limit OFFSET @offset;
+        ORDER BY `total_value` DESC;
       """;
 
     cmd.Parameters.AddWithValue("@steamIds", steamIds);
@@ -128,8 +125,6 @@ public class ReputationService : IReputationService {
         LIMIT @limit OFFSET @offset;
       """;
 
-    cmd.Parameters.AddWithValue("@table",
-      plugin.Config.DatabaseTablePrefix + "total");
     cmd.Parameters.AddWithValue("@limit", limit);
     cmd.Parameters.AddWithValue("@offset", offset);
 
