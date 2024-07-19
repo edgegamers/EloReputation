@@ -32,13 +32,14 @@ public class DownCommand(IEloPlugin elo) : Command(elo) {
       return;
     }
 
-    if (!Elo.GetPeriodLimiter().Decrement(source.Value)) {
-      info.ReplyLocalized(Elo.GetBase().Localizer, "out_of_rep_period");
-      return;
-    }
 
     if (!Elo.GetMapLimiter().Decrement(source.Value)) {
       info.ReplyLocalized(Elo.GetBase().Localizer, "out_of_rep_map");
+      return;
+    }
+
+    if (!Elo.GetPeriodLimiter().Decrement(source.Value)) {
+      info.ReplyLocalized(Elo.GetBase().Localizer, "out_of_rep_period");
       return;
     }
 
