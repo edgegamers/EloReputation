@@ -51,9 +51,9 @@ public class ReputationService : IReputationService {
                    FROM {prefix}negative t2
                    WHERE t2.target = v.target), 0)) AS total_value
           FROM
-              (SELECT DISTINCT target FROM @negative_name
+              (SELECT DISTINCT target FROM {prefix}negative
                UNION
-               SELECT DISTINCT target FROM @positive_name) v;
+               SELECT DISTINCT target FROM {prefix}positive) v;
       """;
 
     await cmd.ExecuteNonQueryAsync();
