@@ -25,7 +25,7 @@ public class ReputationService : IReputationService {
 
     cmd.Parameters.AddWithValue("@steamId", steamId);
 
-    var result = (double)(await cmd.ExecuteScalarAsync() ?? 0);
+    var result = (double)(await cmd.ExecuteScalarAsync() ?? 0.0);
     return Math.Round(result, 2);
   }
 
