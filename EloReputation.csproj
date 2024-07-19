@@ -16,7 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include=".github\workflows\nightly.yml" />
+        <Content Include=".github\workflows\nightly.yml"/>
     </ItemGroup>
 
     <PropertyGroup>

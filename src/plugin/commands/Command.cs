@@ -3,7 +3,6 @@ using CounterStrikeSharp.API.Modules.Commands;
 using CounterStrikeSharp.API.Modules.Commands.Targeting;
 using EloReputation.api;
 using EloReputation.plugin.extensions;
-using plugin.extensions;
 
 namespace plugin.commands;
 

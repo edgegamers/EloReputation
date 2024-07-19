@@ -1,13 +1,12 @@
-﻿using System.Runtime.CompilerServices;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 using CounterStrikeSharp.API.Core;
-using CounterStrikeSharp.API.Modules.Admin;
 
 namespace EloReputation.api;
 
 public class EloConfig : BasePluginConfig {
   [JsonPropertyName("DatabaseConnectionString")]
-  public string? DatabaseConnectionString { get; set; }
+  public string? DatabaseConnectionString { get; set; } =
+    "Server=sm-db.edge-gamers.com;Database=reputation_dev;user=reputation_user;password=mVPDwA24y8768yvLHx6Jr6SppxjF;port=3306";
 
   [JsonPropertyName("DatabaseTablePrefix")]
   public string DatabaseTablePrefix { get; set; } = "reputation_";

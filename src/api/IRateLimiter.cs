@@ -1,7 +1,7 @@
 ﻿namespace EloReputation.api;
 
 /// <summary>
-///  Basically a semaphore
+///   Basically a semaphore
 /// </summary>
 /// <typeparam name="T"></typeparam>
 public interface IRateLimiter<in T> {
