@@ -32,6 +32,9 @@ public class ReputationService : IReputationService {
 
     await cmd.ExecuteNonQueryAsync();
 
+    await createRepTable(conn, plugin.Config.DatabaseTablePrefix + "negative");
+    await createRepTable(conn, plugin.Config.DatabaseTablePrefix + "positive");
+    
     cmd = conn.CreateCommand();
     cmd.CommandText = """
     CREATE OR REPLACE VIEW @total_name AS
@@ -59,9 +62,6 @@ public class ReputationService : IReputationService {
       plugin.Config.DatabaseTablePrefix + "negative");
 
     await cmd.ExecuteNonQueryAsync();
-
-    await createRepTable(conn, plugin.Config.DatabaseTablePrefix + "negative");
-    await createRepTable(conn, plugin.Config.DatabaseTablePrefix + "positive");
   }
 
   private async Task createRepTable(MySqlConnection connection, string name) {
