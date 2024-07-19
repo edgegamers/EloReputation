@@ -143,7 +143,7 @@ public class ReputationService : IReputationService {
       var player = Utilities.GetPlayerFromSteamId(receiver);
       if (player == null || !player.IsValid) return;
       foreach (var p in Utilities.GetPlayers())
-        p.PrintLocalizedChat(plugin.getBase().Localizer, "rep_status",
+        p.PrintLocalizedChat(plugin.GetBase().Localizer, "rep_status",
           player.PlayerName, rep);
     });
   }

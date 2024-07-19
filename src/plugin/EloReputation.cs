@@ -7,20 +7,22 @@ using EloReputation.plugin.services;
 namespace EloReputation.plugin;
 
 public class EloReputation : BasePlugin, IEloPlugin {
-  private IRateLimiter<ulong> rateLimiter = null!;
+  private IRateLimiter<ulong> mapLimiter = null!, periodLimiter = null!;
   private IReputationService repService = null!;
   public override string ModuleName => "EloReputation";
   public override string ModuleVersion => "0.0.1";
   public EloConfig Config { get; set; } = null!;
 
   public void OnConfigParsed(EloConfig config) { Config = config; }
-  public BasePlugin getBase() { return this; }
-  public IReputationService getReputationService() { return repService; }
-  public IRateLimiter<ulong> getRateLimiter() { return rateLimiter; }
+  public BasePlugin GetBase() { return this; }
+  public IReputationService GetReputationService() { return repService; }
+  public IRateLimiter<ulong> GetMapLimiter() { return mapLimiter; }
+  public IRateLimiter<ulong> GetPeriodLimiter() { return periodLimiter; }
 
   public override void Load(bool hotReload) {
-    repService  = new ReputationService(this);
-    rateLimiter = new RateLimiter(this);
+    repService    = new ReputationService(this);
+    mapLimiter    = new MapBasedRateLimiter(this);
+    periodLimiter = new TimeBasedRateLimiter(this);
 
     registerCmds();
   }
@@ -43,5 +45,6 @@ public class EloReputation : BasePlugin, IEloPlugin {
     AddCommand("css_reptop", "", top);
     AddCommand("css_leaderboard", "", top);
     AddCommand("css_lb", "", top);
+    AddCommand("css_top", "", top);
   }
 }

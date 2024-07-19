@@ -6,7 +6,6 @@ using CounterStrikeSharp.API.Modules.Utils;
 using EloReputation.api;
 using EloReputation.plugin.extensions;
 using EloReputation.plugin.menus;
-using plugin.commands;
 
 namespace EloReputation.plugin.commands.elo;
 
@@ -17,7 +16,7 @@ public class RepTopCommand(IEloPlugin elo) : Command(elo) {
 
     if (executor == null) {
       Server.NextFrameAsync(async () => {
-        var top = await elo.getReputationService().GetTopReputation();
+        var top = await Elo.GetReputationService().GetTopReputation();
         Server.NextFrame(() => {
           var i = 1;
           foreach (var entry in top) {
@@ -34,15 +33,15 @@ public class RepTopCommand(IEloPlugin elo) : Command(elo) {
 
     Server.NextFrameAsync(async () => {
       if (id == null) return;
-      var top = await elo.getReputationService().GetTopReputation(50);
+      var top = await Elo.GetReputationService().GetTopReputation(50);
       Server.NextFrame(() => {
-        var menu = new ReputationMenu(elo, top);
-        MenuManager.OpenCenterHtmlMenu(elo.getBase(), executor!, menu);
+        var menu = new ReputationMenu(Elo, top);
+        MenuManager.OpenCenterHtmlMenu(Elo.GetBase(), executor, menu);
       });
-      var pos = await elo.getReputationService()
+      var pos = await Elo.GetReputationService()
        .GetReputationPosition(id.Value);
       Server.NextFrame(() => {
-        executor.PrintLocalizedChat(elo.getBase().Localizer, "rep_ranking",
+        executor.PrintLocalizedChat(Elo.GetBase().Localizer, "rep_ranking",
           pos.Item1, pos.Item2);
       });
     });

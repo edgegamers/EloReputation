@@ -8,7 +8,7 @@ namespace EloReputation.plugin.menus;
 
 public class ReputationMenu : CenterHtmlMenu {
   public ReputationMenu(IEloPlugin plugin, IEnumerable<(ulong, double)> ranks) :
-    base("Reputation Leaderboard", plugin.getBase()) {
+    base("Reputation Leaderboard", plugin.GetBase()) {
     var i = 1;
     foreach (var entry in ranks) {
       var name = Utilities.GetPlayerFromSteamId(entry.Item1)?.PlayerName
