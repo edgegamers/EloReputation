@@ -15,9 +15,13 @@
         <PackageReference Include="MySqlConnector" Version="2.3.1"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Include=".github\workflows\nightly.yml" />
+    </ItemGroup>
+
     <PropertyGroup>
         <!--Publish Configuration-->
-        <PublishBaseDirectory>$(MSBuildThisFileDirectory)/../../build</PublishBaseDirectory>
+        <PublishBaseDirectory>$(MSBuildThisFileDirectory)/build</PublishBaseDirectory>
         <PublishDir>$(PublishBaseDirectory)/</PublishDir>
 
         <PublishRelease>false</PublishRelease>

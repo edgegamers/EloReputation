@@ -28,6 +28,6 @@ jobs:
     - uses: actions/upload-artifact@v4.0.0
       with:
         name: elorep-nightly
-        path: build/EloReputation
+        path: build/
         # If build didn't put any artifacts in the build folder, consider it an error
         if-no-files-found: error
