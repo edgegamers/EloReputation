@@ -79,7 +79,7 @@ Consequently, you can set both short-burst and long-term cooldowns.
 {
   "DatabaseConnectionString": "server=localhost;database",
   "DatabaseTablePrefix": "eloreputation_",
-  "DatabaseTablePrefix": {
+  "EloGrantedPerMap": {
     "": 1,
     "@css/generic": 2,
     "@css/chat": 3,
