@@ -8,24 +8,6 @@ namespace EloReputation.plugin.services;
 public class RateLimiter(IEloPlugin plugin) : IRateLimiter<ulong> {
   private readonly Dictionary<ulong, int> limits = new();
 
-  /// <summary>
-  /// Gets the max configured number of rep points to give to a player
-  /// 0 if the player is not authorized or otherwise configured
-  /// </summary>
-  /// <param name="player"></param>
-  /// <exception cref="ArgumentNullException"></exception>
-  /// <returns></returns>
-  private int getLimit(CCSPlayerController player) {
-    if (player.AuthorizedSteamID == null)
-      throw new ArgumentNullException(nameof(player.AuthorizedSteamID));
-
-    return (from entry in plugin.Config.EloGrantedPerMap
-        where string.IsNullOrEmpty(entry.Key)
-          || AdminManager.PlayerHasPermissions(player, entry.Key)
-        select entry.Value).Prepend(0)
-     .Max();
-  }
-
   public void Reset() { limits.Clear(); }
   public void Reset(ulong key) { limits.Remove(key); }
 
@@ -51,5 +33,23 @@ public class RateLimiter(IEloPlugin plugin) : IRateLimiter<ulong> {
     if (Get(key) <= 0) return false;
     limits[key]--;
     return true;
+  }
+
+  /// <summary>
+  ///   Gets the max configured number of rep points to give to a player
+  ///   0 if the player is not authorized or otherwise configured
+  /// </summary>
+  /// <param name="player"></param>
+  /// <exception cref="ArgumentNullException"></exception>
+  /// <returns></returns>
+  private int getLimit(CCSPlayerController player) {
+    if (player.AuthorizedSteamID == null)
+      throw new ArgumentNullException(nameof(player.AuthorizedSteamID));
+
+    return (from entry in plugin.Config.EloGrantedPerMap
+        where string.IsNullOrEmpty(entry.Key)
+          || AdminManager.PlayerHasPermissions(player, entry.Key)
+        select entry.Value).Prepend(0)
+     .Max();
   }
 }

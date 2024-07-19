@@ -1,0 +1,13 @@
+﻿{
+  "prefix": "{purple}[{lightpurple}Rep{purple}] {grey}",
+  "usage": "%prefix%Usage: {green}{0}",
+  "player_not_found": "%prefix%{red}Could not find a valid target using \"{lightblue}{0}{red}\".",
+  "player_found_multiple": "%prefix%{red}Found multiple players using \"{lightblue}{0}{red}\".",
+  "player_invalid": "%prefix%{lightblue}{0} {red}have an unverified Steam ID.",
+  "out_of_rep": "%prefix%{red}You are out of reputation points to give for this map. {green}Dedicated Supporters{grey} get more per map!",
+  "rep_given": "%prefix%{white}You {green}commended {lightred}{0}{white}.",
+  "rep_taken": "%prefix%{white}You {darkred}denounced {lightred}{0}{white}.",
+  "rep_status": "%prefix%{lightred}{0} {white}has {yellow}{1} {white}reputation points.",
+  "rep_fetching": "%prefix%Fetching reputation data for {yellow}{0}{grey} player{1}...",
+  "rep_ranking": "%prefix%You are ranked {yellow}#{0}{orange}/{1}{grey}."
+}
