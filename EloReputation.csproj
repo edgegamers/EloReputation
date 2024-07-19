@@ -17,6 +17,7 @@
 
     <ItemGroup>
         <Content Include=".github\workflows\nightly.yml"/>
+        <None Update="lang\**" CopyToOutputDirectory="PreserveNewest"/>
     </ItemGroup>
 
     <PropertyGroup>
