@@ -17,7 +17,7 @@
 
     <PropertyGroup>
         <!--Publish Configuration-->
-        <PublishBaseDirectory>$(MSBuildThisFileDirectory)/build</PublishBaseDirectory>
+        <PublishBaseDirectory>$(MSBuildThisFileDirectory)/../build</PublishBaseDirectory>
         <PublishDir>$(PublishBaseDirectory)/</PublishDir>
 
         <PublishRelease>false</PublishRelease>
