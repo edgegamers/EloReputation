@@ -25,8 +25,10 @@ public class ReputationService : IReputationService {
 
     cmd.Parameters.AddWithValue("@steamId", steamId);
 
-    var result = (double)(await cmd.ExecuteScalarAsync() ?? 0.0);
-    return Math.Round(result, 2);
+    var result = await cmd.ExecuteScalarAsync();
+
+    if (result is not double) return 0.0;
+    return Math.Round((double)result, 2);
   }
 
   public async Task<IEnumerable<(ulong, double)>> GetReputation(
