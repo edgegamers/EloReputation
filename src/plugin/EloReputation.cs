@@ -2,6 +2,7 @@
 using CounterStrikeSharp.API.Modules.Commands;
 using EloReputation.api;
 using EloReputation.plugin.commands.elo;
+using EloReputation.plugin.listeners;
 using EloReputation.plugin.services;
 
 namespace EloReputation.plugin;
@@ -23,6 +24,7 @@ public class EloReputation : BasePlugin, IEloPlugin {
     repService    = new ReputationService(this);
     mapLimiter    = new MapBasedRateLimiter(this);
     periodLimiter = new TimeBasedRateLimiter(this);
+    _             = new MVPAssignerListener(this);
 
     registerCmds();
   }
