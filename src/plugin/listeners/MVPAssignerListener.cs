@@ -26,9 +26,8 @@ public class MVPAssignerListener {
           var stats = player.ActionTrackingServices?.MatchStats;
           if (stats == null) continue;
 
-          stats.Objective = Math.Max(0, (int)Math.Floor(elo.Item2));
-          Utilities.SetStateChanged(player, "CSPerRoundStats_t",
-            "m_iObjective");
+          player.MVPs = (int)Math.Floor(elo.Item2);
+          Utilities.SetStateChanged(player, "CCSPlayerController", "m_iMVPs");
         }
       });
     });
