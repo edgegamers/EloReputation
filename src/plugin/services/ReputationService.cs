@@ -36,20 +36,18 @@ public class ReputationService : IReputationService {
     await using var conn =
       new MySqlConnection(plugin.Config.DatabaseConnectionString);
     await conn.OpenAsync();
-
     var cmd = conn.CreateCommand();
     cmd.CommandText = $"""
         SELECT `target`, `total_value` FROM `{plugin.Config.DatabaseTablePrefix}total`
-        WHERE `target` IN (@steamIds)
+        WHERE `target` IN ({string.Join(",", steamIds)})
         ORDER BY `total_value` DESC;
       """;
-
-    cmd.Parameters.AddWithValue("@steamIds", steamIds);
 
     await using var reader  = await cmd.ExecuteReaderAsync();
     var             results = new List<(ulong, double)>();
     while (await reader.ReadAsync())
-      results.Add(((ulong)reader["target"], (double)reader["total_value"]));
+      results.Add((ulong.Parse(reader["target"].ToString() ?? string.Empty),
+        (double)reader["total_value"]));
 
     return results;
   }
