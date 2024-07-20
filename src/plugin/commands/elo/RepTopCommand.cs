@@ -22,7 +22,13 @@ public class RepTopCommand(IEloPlugin elo) : Command(elo) {
 
         var valueTuples = top.ToList();
         for (var i = 0; i < valueTuples.Count; i++) {
-          names.Add(NameUtil.GetPlayerNameAsync(valueTuples[i].Item1));
+          var player = Utilities.GetPlayerFromSteamId(valueTuples[i].Item1);
+          if (player != null && player.IsValid) {
+            names.Add(Task.FromResult(player.PlayerName));
+            continue;
+          }
+
+          names.Add(NameUtil.GetPlayerNameFromSteam(valueTuples[i].Item1));
         }
 
         var result = await Task.WhenAll(names);

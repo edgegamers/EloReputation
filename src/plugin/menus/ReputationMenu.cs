@@ -13,11 +13,17 @@ public class ReputationMenu : CenterHtmlMenu {
     var entries = ranks.ToList();
     var names   = new List<Task<string>>();
 
-    Server.NextFrameAsync(async () => {
-      for (var i = 0; i < entries.Count; i++) {
-        names.Add(NameUtil.GetPlayerNameAsync(entries[i].Item1));
+    foreach (var entry in entries) {
+      var player = Utilities.GetPlayerFromSteamId(entry.Item1);
+      if (player != null && player.IsValid) {
+        names.Add(Task.FromResult(player.PlayerName));
+        continue;
       }
 
+      names.Add(NameUtil.GetPlayerNameFromSteam(entry.Item1));
+    }
+
+    Server.NextFrameAsync(async () => {
       var result = await Task.WhenAll(names);
 
       Server.NextFrame(() => {
