@@ -45,9 +45,10 @@ public class RepCommand(IEloPlugin elo) : Command(elo) {
     Server.NextFrameAsync(async () => {
       var reps = (await Elo.GetReputationService().GetReputation(steamIds))
        .ToList();
-      var names = await NameUtil.GetPlayerNamesFromSteam(steamIds);
+      var names =
+        await NameUtil.GetPlayerNamesFromSteam(reps.Select(p => p.Item1));
       Server.NextFrame(() => {
-        for (var i = 0; i < steamIds.Count; i++) {
+        for (var i = 0; i < reps.Count; i++) {
           var name = names[i];
           var rep  = Math.Round(reps[i].Item2, 2);
           executor.PrintLocalizedChat(Elo.GetBase().Localizer, "rep_status",

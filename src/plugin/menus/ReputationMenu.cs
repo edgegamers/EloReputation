@@ -11,14 +11,13 @@ public class ReputationMenu : CenterHtmlMenu {
   public ReputationMenu(IEloPlugin plugin, IEnumerable<(ulong, double)> ranks) :
     base("Reputation Leaderboard", plugin.GetBase()) {
     var entries = ranks.ToList();
-    var names = NameUtil.GetPlayerNamesFromSteam(entries.Select(p => p.Item1));
 
     Server.NextFrameAsync(async () => {
-      var result = await Task.WhenAll(names);
+    var names = await NameUtil.GetPlayerNamesFromSteam(entries.Select(p => p.Item1));
 
       Server.NextFrame(() => {
         for (var i = 0; i < entries.Count; i++) {
-          var name = result[i];
+          var name = names[i];
           var rep  = Math.Round(entries[i].Item2, 2);
           var pos  = i;
           AddMenuOption(
