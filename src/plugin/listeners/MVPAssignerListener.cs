@@ -15,7 +15,9 @@ public class MVPAssignerListener {
   private HookResult OnRoundStart(EventRoundStart @event, GameEventInfo info) {
     var players = Utilities.GetPlayers()
      .Where(p => p.AuthorizedSteamID != null)
-     .Select(p => p.AuthorizedSteamID!.SteamId64);
+     .Select(p => p.AuthorizedSteamID!.SteamId64)
+     .ToList();
+    if (players.Count == 0) return HookResult.Continue;
 
     Server.NextFrameAsync(async () => {
       var elos = await plugin.GetReputationService().GetReputation(players);
@@ -26,9 +28,8 @@ public class MVPAssignerListener {
           var stats = player.ActionTrackingServices?.MatchStats;
           if (stats == null) continue;
 
-          stats.Objective = Math.Max(0, (int)Math.Floor(elo.Item2));
-          Utilities.SetStateChanged(player, "CSPerRoundStats_t",
-            "m_iObjective");
+          player.MVPs = (int)Math.Floor(elo.Item2);
+          Utilities.SetStateChanged(player, "CCSPlayerController", "m_iMVPs");
         }
       });
     });
