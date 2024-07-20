@@ -17,26 +17,15 @@ public class RepTopCommand(IEloPlugin elo) : Command(elo) {
 
     if (executor == null) {
       Server.NextFrameAsync(async () => {
-        var top   = await Elo.GetReputationService().GetTopReputation();
-        var names = new List<Task<string>>();
-
-        var valueTuples = top.ToList();
-        for (var i = 0; i < valueTuples.Count; i++) {
-          var player = Utilities.GetPlayerFromSteamId(valueTuples[i].Item1);
-          if (player != null && player.IsValid) {
-            names.Add(Task.FromResult(player.PlayerName));
-            continue;
-          }
-
-          names.Add(NameUtil.GetPlayerNameFromSteam(valueTuples[i].Item1));
-        }
-
-        var result = await Task.WhenAll(names);
+        var top = (await Elo.GetReputationService().GetTopReputation())
+         .ToList();
+        var names =
+          await NameUtil.GetPlayerNamesFromSteam(top.Select(p => p.Item1));
 
         Server.NextFrame(() => {
           var i = 1;
-          foreach (var entry in valueTuples) {
-            var name = result[i - 1];
+          foreach (var entry in top) {
+            var name = names[i - 1];
             var rep  = Math.Round(entry.Item2, 2);
             printTo(executor,
               $"{ChatColors.Green}{i++}{ChatColors.Grey}: {ChatColors.Blue}{name} {ChatColors.Grey}- {ChatColors.Yellow}{rep}");
