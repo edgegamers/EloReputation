@@ -43,8 +43,6 @@ public class ReputationService : IReputationService {
         ORDER BY `total_value` DESC;
       """;
 
-    Server.NextFrame(() => { Server.PrintToConsole(cmd.CommandText); });
-
     await using var reader  = await cmd.ExecuteReaderAsync();
     var             results = new List<(ulong, double)>();
     while (await reader.ReadAsync())

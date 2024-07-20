@@ -15,7 +15,9 @@ public class MVPAssignerListener {
   private HookResult OnRoundStart(EventRoundStart @event, GameEventInfo info) {
     var players = Utilities.GetPlayers()
      .Where(p => p.AuthorizedSteamID != null)
-     .Select(p => p.AuthorizedSteamID!.SteamId64);
+     .Select(p => p.AuthorizedSteamID!.SteamId64)
+     .ToList();
+    if (players.Count == 0) return HookResult.Continue;
 
     Server.NextFrameAsync(async () => {
       var elos = await plugin.GetReputationService().GetReputation(players);
