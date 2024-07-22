@@ -157,10 +157,16 @@ public class ReputationService : IReputationService {
     BEGIN
         DECLARE sum double DEFAULT 0;
         DECLARE i INT DEFAULT 1;
-        WHILE i <= n DO
-            SET sum = sum + 1.0/i;
-            SET i = i + 1;
-        END WHILE;
+    
+        IF n > 50 THEN
+            SET sum = LOG(n) + 1.0/(2*n) + 0.57721566490153286060651209008240243104215933593992; -- Approximation for large n
+        ELSE
+            WHILE i <= n DO
+                SET sum = sum + 1.0/i;
+                SET i = i + 1;
+            END WHILE;
+        END IF;
+    
         RETURN sum;
     END;
     """;
