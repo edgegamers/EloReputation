@@ -38,6 +38,7 @@ public class UpCommand(IEloPlugin elo) : Command(elo) {
     }
 
     if (!Elo.GetPeriodLimiter().Decrement(source.Value)) {
+      Elo.GetMapLimiter().Increment(source.Value);
       info.ReplyLocalized(Elo.GetBase().Localizer, "out_of_rep_period");
       return;
     }
