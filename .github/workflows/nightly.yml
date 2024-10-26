@@ -1,9 +1,12 @@
-﻿# This workflow will build a .NET project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+﻿name: Nightlies
 
-name: Nightlies
-
-on: [ push, pull_request ]
+on:
+  push:
+    branches:
+      - main
+    tags:     # Trigger on tags as well
+      - '*.*.*'
+  pull_request:
 
 jobs:
   build:
@@ -25,9 +28,10 @@ jobs:
           dotnet build EloReputation.csproj --no-restore
           dotnet publish EloReputation.csproj --no-build --no-restore
 
-      - uses: actions/upload-artifact@v4.0.0
+      - name: Upload Nightly Artifact
+        if: github.event_name != 'push' || contains(github.ref, 'refs/tags/v')
+        uses: actions/upload-artifact@v4.0.0
         with:
           name: elorep-nightly
           path: build/
-          # If build didn't put any artifacts in the build folder, consider it an error
           if-no-files-found: error
