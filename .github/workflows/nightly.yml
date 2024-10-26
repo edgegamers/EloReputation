@@ -5,7 +5,7 @@ on:
     branches:
       - main
     tags:     # Trigger on tags as well
-      - 'v*'
+      - '*.*.*'
   pull_request:
 
 jobs:
