@@ -29,7 +29,7 @@ jobs:
           dotnet publish EloReputation.csproj --no-build --no-restore
 
       - name: Upload Nightly Artifact
-        if: github.event_name != 'push' || contains(github.ref, 'refs/tags/v')
+        if: github.event_name != 'push' || contains(github.ref, 'refs/tags/')
         uses: actions/upload-artifact@v4.0.0
         with:
           name: elorep-nightly
