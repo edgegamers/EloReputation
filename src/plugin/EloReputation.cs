@@ -45,8 +45,5 @@ public class EloReputation : BasePlugin, IEloPlugin {
     AddCommand("css_elo", "", rep);
     AddCommand("css_elotop", "", top);
     AddCommand("css_reptop", "", top);
-    AddCommand("css_leaderboard", "", top);
-    AddCommand("css_lb", "", top);
-    AddCommand("css_top", "", top);
   }
 }
