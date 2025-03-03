@@ -147,57 +147,62 @@ public class ReputationService : IReputationService {
   }
 
   private async void createReputationDatabase() {
-    await using var conn =
-      new MySqlConnection(plugin.Config.DatabaseConnectionString);
-    await conn.OpenAsync();
+    try {
+      await using var conn =
+        new MySqlConnection(plugin.Config.DatabaseConnectionString);
+      await conn.OpenAsync();
 
-    var cmd = conn.CreateCommand();
-    cmd.CommandText = """
-    CREATE FUNCTION IF NOT EXISTS harmonic_sum(n INT) RETURNS double
-    BEGIN
-        DECLARE sum double DEFAULT 0;
-        DECLARE i INT DEFAULT 1;
-    
-        IF n > 50 THEN
-            SET sum = LOG(n) + 1.0/(2*n) + 0.57721566490153286060651209008240243104215933593992; -- Approximation for large n
-        ELSE
-            WHILE i <= n DO
-                SET sum = sum + 1.0/i;
-                SET i = i + 1;
-            END WHILE;
-        END IF;
-    
-        RETURN sum;
-    END;
-    """;
-
-    await cmd.ExecuteNonQueryAsync();
-
-    await createRepTable(conn, plugin.Config.DatabaseTablePrefix + "negative");
-    await createRepTable(conn, plugin.Config.DatabaseTablePrefix + "positive");
-
-    cmd = conn.CreateCommand();
-    var prefix = plugin.Config.DatabaseTablePrefix;
-
-    cmd.CommandText = $"""
-          CREATE OR REPLACE VIEW {prefix}total AS
-          SELECT
-              target,
-              (COALESCE(
-                  (SELECT SUM(harmonic_sum(count))
-                   FROM {prefix}positive t1
-                   WHERE t1.target = v.target), 0) -
-               COALESCE(
-                  (SELECT SUM(harmonic_sum(count))
-                   FROM {prefix}negative t2
-                   WHERE t2.target = v.target), 0)) AS total_value
-          FROM
-              (SELECT DISTINCT target FROM {prefix}negative
-               UNION
-               SELECT DISTINCT target FROM {prefix}positive) v;
+      var cmd = conn.CreateCommand();
+      cmd.CommandText = """
+      CREATE FUNCTION IF NOT EXISTS harmonic_sum(n INT) RETURNS double
+      BEGIN
+          DECLARE sum double DEFAULT 0;
+          DECLARE i INT DEFAULT 1;
+      
+          IF n > 50 THEN
+              SET sum = LOG(n) + 1.0/(2*n) + 0.57721566490153286060651209008240243104215933593992; -- Approximation for large n
+          ELSE
+              WHILE i <= n DO
+                  SET sum = sum + 1.0/i;
+                  SET i = i + 1;
+              END WHILE;
+          END IF;
+      
+          RETURN sum;
+      END;
       """;
 
-    await cmd.ExecuteNonQueryAsync();
+      await cmd.ExecuteNonQueryAsync();
+
+      await createRepTable(conn,
+        plugin.Config.DatabaseTablePrefix + "negative");
+      await createRepTable(conn,
+        plugin.Config.DatabaseTablePrefix + "positive");
+
+      cmd = conn.CreateCommand();
+      var prefix = plugin.Config.DatabaseTablePrefix;
+
+      cmd.CommandText = $"""
+            CREATE OR REPLACE VIEW {prefix}total AS
+            SELECT
+                target,
+                (COALESCE(
+                    (SELECT SUM(harmonic_sum(count))
+                     FROM {prefix}positive t1
+                     WHERE t1.target = v.target), 0) -
+                 COALESCE(
+                    (SELECT SUM(harmonic_sum(count))
+                     FROM {prefix}negative t2
+                     WHERE t2.target = v.target), 0)) AS total_value
+            FROM
+                (SELECT DISTINCT target FROM {prefix}negative
+                 UNION
+                 SELECT DISTINCT target FROM {prefix}positive) v;
+        """;
+
+      await cmd.ExecuteNonQueryAsync();
+      await conn.CloseAsync();
+    } catch (MySqlException e) { Console.WriteLine(e); }
   }
 
   private async Task createRepTable(MySqlConnection connection, string name) {
