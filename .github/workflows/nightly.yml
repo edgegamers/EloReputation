@@ -1,6 +1,16 @@
 ﻿name: Nightlies
 
-on: [ push, pull_request ]
+on:
+  pull_request:
+  push:
+    branches:
+      - dev
+      - main
+    paths:
+      - 'src/**'
+      - '.github/workflows/nightly.yml'
+  schedule:
+    - cron: '15 0 * * 3' # Every Wednesday at 00:15 UTC
 
 jobs:
   build:
