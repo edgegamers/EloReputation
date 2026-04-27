@@ -11,6 +11,7 @@ on:
       - '.github/workflows/nightly.yml'
   schedule:
     - cron: '15 0 * * 3' # Every Wednesday at 00:15 UTC
+  workflow_dispatch:
 
 jobs:
   build:
